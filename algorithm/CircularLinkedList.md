@@ -39,5 +39,86 @@
 
 한 문장으로 정리하면,
 **원형 연결리스트는 마지막 노드가 첫 번째 노드를 가리켜, 리스트 전체가 원처럼 연결된 자료구조**이다.
+```C#
+using System;
 
+class Node
+{
+    public object Data;
+    public Node Next;
+    public Node(Object data)
+    {
+        this.Data = data;
+    }
+    public Node()
+    {
+    }
+}
 
+class LinkedList
+{
+    Node[] nodes;
+    int maxSize = 1;
+    int currentIndex = 0;
+    public LinkedList()
+    {
+        nodes = new Node[maxSize];
+    }
+
+    public void Add(Object data)
+    {
+        Node[] newNodes = new Node[maxSize + 1];
+
+        for (int i = 0; i < currentIndex; i++)
+        {
+            newNodes[i] = nodes[i];
+        }
+
+        Node node = new Node(data);
+        node.Next = nodes[0];
+
+        newNodes[currentIndex] = node;
+
+        nodes = newNodes;
+
+        if (currentIndex != 0)
+        {
+            var beforeNode = nodes[currentIndex - 1];
+            beforeNode.Next = node;
+        }
+        currentIndex++;
+        maxSize++;
+    }
+    public Object Get(int index)
+    {
+        return nodes[index].Data;
+    }
+    public Object NextData(int index)
+    {
+        return nodes[index].Next.Data;
+    }
+    public int Size
+    {
+        get { return currentIndex; }
+    }
+}
+
+public class Test
+{
+    static void Main(string[] args)
+    {
+        LinkedList list = new LinkedList();
+        list.Add(1);
+        list.Add(2);
+        list.Add(3);
+        list.Add(4);
+        list.Add(5);
+
+        for (int i = 0; i < list.Size; i++)
+        {
+            Console.WriteLine("현재 노드 데이터 : " + list.Get(i));
+            Console.WriteLine("다음 노드 데이터 : " + list.NextData(i));
+        }
+    }
+}
+```
