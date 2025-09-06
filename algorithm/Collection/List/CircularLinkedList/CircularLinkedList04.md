@@ -30,8 +30,48 @@ Add
 - firstNode가 없을 때에 대한 처리
 
 
+```C#
+public void Add(Object data, int index)
+{
+    // 예외 발생
+    if (index < 0 || index > Count)
+    {
+        throw new IndexOutOfRangeException();
+    }
+    var node = new Node(data);
 
+    if (Count == 0)
+    {
+        firstNode = node;
+        lastNode = node;
+    }
 
+    var currentNode = firstNode;
+    var beforeNode = lastNode;
+
+    // LinkedList 구현 중 개선사항 적용 부분
+    for (int i = 0; i < Count; i++)
+    {
+        if (i == index)
+        {
+            break;
+        }
+
+        beforeNode = currentNode;
+        currentNode = currentNode.Next;
+    }
+
+    beforeNode.Next = node;
+    node.Next = currentNode;
+
+    // 마지막 노드가 추가된 노드일 경우 lastNode 업데이트
+    if (index == Count)
+    {
+        lastNode = node;
+    }
+    Count++;
+}
+```
 
 
 Delete
