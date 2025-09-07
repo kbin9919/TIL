@@ -29,52 +29,244 @@ Add
 - 필드의 firstNode를 신규 노드로 변경한다.
 - firstNode가 없을 때에 대한 처리
 
-
+# 개선사항 적용된 원형 연결리스트
 ```C#
-public void Add(Object data, int index)
+class Node
 {
-    // 예외 발생
-    if (index < 0 || index > Count)
+    public object Data;
+    public Node Next;
+    public Node Bofore;
+
+    public Node(Object data)
     {
-        throw new IndexOutOfRangeException();
+        this.Data = data;
     }
-    var node = new Node(data);
-
-    if (Count == 0)
+    public Node()
     {
-        firstNode = node;
-        lastNode = node;
     }
+}
 
-    var currentNode = firstNode;
-    var beforeNode = lastNode;
+class LinkedList
+{
+    private Node firstNode;
+    private Node lastNode;
+    public int Count = 0;
 
-    // LinkedList 구현 중 개선사항 적용 부분
-    for (int i = 0; i < Count; i++)
+    public void Add(Object data)
     {
-        if (i == index)
+        var node = new Node(data);
+
+        if (firstNode == null)
         {
-            break;
+            firstNode = node;
+            lastNode = node;
+
+            firstNode.Next = lastNode;
+            Count++;
+            return;
         }
 
-        beforeNode = currentNode;
-        currentNode = currentNode.Next;
-    }
-
-    beforeNode.Next = node;
-    node.Next = currentNode;
-
-    // 마지막 노드가 추가된 노드일 경우 lastNode 업데이트
-    if (index == Count)
-    {
+        // 새로운 노드를 마지막 노드의 다음 노드로 추가
+        lastNode.Next = node;
+        // 새로운 노드를 마지막 노드로 업데이트
         lastNode = node;
+        // 처음노드를 마지막 노드의 다음노드로 추가
+        node.Next = firstNode;
+
+        Count++;
     }
-    Count++;
+
+    public void Add(Object data, int index)
+    {
+        // 예외 발생
+        if (index < 0 || index > Count)
+        {
+            throw new IndexOutOfRangeException();
+        }
+        var node = new Node(data);
+
+        if (Count == 0)
+        {
+            firstNode = node;
+            lastNode = node;
+        }
+
+        var currentNode = firstNode;
+        var beforeNode = lastNode;
+
+        for (int i = 0; i < Count; i++)
+        {
+            if (i == index)
+            {
+                break;
+            }
+
+            beforeNode = currentNode;
+            currentNode = currentNode.Next;
+        }
+
+        beforeNode.Next = node;
+        node.Next = currentNode;
+
+        if (index == 0)
+        {
+            // 노드를 추가한 인덱스가 0인 경우 FirstNode를 업데이트
+            firstNode = node;
+        }
+        if (index == Count)
+        {
+            // 노드를 추가한 인덱스가 리스트의 크기랑 같은 경우 LastNode를 업데이트
+            lastNode = node;
+        }
+        Count++;
+    }
+    ^
+    public void Delete(int index)
+    {
+        // 예외 발생
+        if (index < 0 || index >= Count)
+        {
+            throw new IndexOutOfRangeException();
+        }
+
+        var currentNode = firstNode;
+        var beforeNode = lastNode;
+
+        for (int i = 0; i < Count; i++)
+        {
+            if (i == index)
+            {
+                break;
+            }
+            beforeNode = currentNode;
+            currentNode = currentNode.Next;
+        }
+
+        if (currentNode.Next != null)
+        {
+            beforeNode.Next = currentNode.Next;
+        }
+
+        if (index == 0)
+        {
+            // 노드를 삭제한 인덱스가 0인 경우 FirstNode를 업데이트
+            firstNode = firstNode.Next;
+        }
+        if (index == Count)
+        {
+            // 마지막 노드가 삭제된 노드일 경우 lastNode 업데이트
+            lastNode = beforeNode;
+        }
+        Count--;
+    }
+
+    public object Get(int index)
+    {
+        // 예외 발생
+        if (index < 0 || index >= Count)
+        {
+            throw new IndexOutOfRangeException();
+        }
+
+        var currentNode = firstNode;
+
+        for (int i = 0; i < Count; i++)
+        {
+
+            if (i == index)
+            {
+                break;
+            }
+            currentNode = currentNode.Next;
+        }
+        return currentNode.Data;
+    }
+
+    public void Edit(Object data, int index)
+    {
+        // 예외 발생
+        if (index < 0 || index >= Count)
+        {
+            throw new IndexOutOfRangeException();
+        }
+
+        var currentNode = firstNode;
+
+        for (int i = 0; i < Count; i++)
+        {
+            if (i == index)
+            {
+                break;
+            }
+            currentNode = currentNode.Next;
+        }
+
+        currentNode.Data = data;
+    }
+
+}
+
+public class Test
+{
+    static void Main(string[] args)
+    {
+        LinkedList list = new LinkedList();
+
+        list.Add(1);
+        list.Add(2);
+        list.Add(3);
+        list.Add(4);
+        //list.Add(5, 4);
+        list.Add(5, 0);
+        list.Add(10, 2);
+        list.Add(15, 3);
+        list.Delete(1);
+        list.Edit(20, 3);
+        list.Delete(0);
+        list.Delete(4);
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            var data = list.Get(i);
+            Console.WriteLine("현재 노드 데이터 : " + data);
+        }
+    }
 }
 ```
+```
 
+```C#
+출력
 
-Delete
-* 맨 앞에서 Delete할 때
-* 중간에 Delete할 때
-* 마지막에 Delete할 때
+현재 노드 데이터 : 10
+현재 노드 데이터 : 15
+현재 노드 데이터 : 20
+현재 노드 데이터 : 3
+```
+
+# 각 스텝 별 list 데이터
+
+list.Add(1);
+list.Add(2);
+list.Add(3);
+list.Add(4);
+list.Add(5, 0);
+list.Add(10, 2);
+list.Add(15, 3);
+list.Delete(1);
+list.Edit(20, 3);
+list.Delete(0);
+list.Delete(4);
+
+* 1
+* 1 -> 2
+* 1 -> 2 -> 3
+* 1 -> 2 -> 3 -> 4
+* 5 -> 1 -> 2 -> 3-> 4
+* 5 -> 1 -> 10 -> 2 -> 3-> 4
+* 5 -> 1 -> 10 -> 15 -> 2 -> 3-> 4
+* 5 -> 10 -> 15 -> 2 -> 3-> 4
+* 5 -> 10 -> 15 -> 20 -> 3-> 4
+* 10 -> 15 -> 20 -> 3-> 4
+* 10 -> 15 -> 20 -> 3
+
