@@ -278,4 +278,5 @@ Index 2: 30
 삭제 후 LinkedList 출력:
 Index 0: 100
 Index 1: 30
+
 ```
