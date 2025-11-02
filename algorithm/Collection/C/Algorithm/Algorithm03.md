@@ -4,7 +4,7 @@
 
 주사위 두 개를 백만 번 던져서 나온 숫자의 합을 배열에 저장하고 활률을 출력하는 프로그램을 작성
 
-```csharp
+```c
 #include <stdio.h>
 #include <time.h>
 

@@ -8,7 +8,7 @@
 * 26~38 스페이드
 * 39~51 다이아
 
-```csharp
+```c
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>

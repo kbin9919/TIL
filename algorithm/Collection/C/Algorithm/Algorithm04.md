@@ -4,7 +4,7 @@
 
 1에서 10까지 겹치지 않는 랜덤 숫자를 출력하는 프로그램을 작성
 
-```csharp
+```c
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
