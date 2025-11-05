@@ -49,4 +49,52 @@ int main() {
 1. 동시성 문제를 고려해서, 구조체를 사용해보고 DDD형태로 로직을 개선해보기.
 2. 결과 표기는 교재에서 제공해주는 값이 아닌, 직접 테스트하면서 추가할 것
 	
+## iCnt, oCnt를 구조체를 사용하여 수정된 소스코드
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
+// 동시성 문제를 없애기 위해서 구조체 사용할것, DDD형태로 변환할것, 결과값은 직접 테스트하면서 확인할 것
+typedef struct Count {
+	int iCnt;
+	int oCnt;
+} Count;
+
+Count* InitCount() {
+	Count* count = (Count*)calloc(1, sizeof(Count));
+
+	return count;
+}
+
+int GetPie(Count* count)
+{
+	int x = rand() % 100;
+	int y = rand() % 100;
+	int r = 50;
+
+	(x - r)* (x - r) + (y - r) * (y - r) <= r * r ? count->iCnt++ : count->oCnt++;
+}
+
+void PrintPointPie() {
+	int printI = 10;
+
+	Count* count = InitCount();
+
+	for (int i = 1; i <= 1000000000; i++) {
+		GetPie(count);
+
+		if (i == printI) {
+			double pie = (double)count->iCnt / (count->iCnt + count->oCnt) * 4;
+			printf("i : %d pie : %.18f \n ", i, pie);
+			printI = printI * 10;
+		}
+	}
+	double pie = (double)count->iCnt / (count->iCnt + count->oCnt) * 4;
+	printf("iCnt : %d, oCnt : %d, pie : %.18f \n ", count->iCnt, count->oCnt, pie);
+}
+
+int main() {
+	PrintPointPie();
+}
+```
